@@ -8,16 +8,24 @@ def main():
     #p = optparse.OptionParser()
     #p.add_option('--person', '-p', default="world")
     #options, arguments = p.parse_args()
-    charges = Charges('vtUQeOtUnYr7PGCLQ96Ul4zqpDUO4sOE')
+    stripe = Stripe("<API_TOKEN>")
+    charges = Charges(stripe)
 
     chargeInfo = {
         "amount": 400,
         "currency": "usd",
-        "card": "tok_HxEkAd7RCjHs7m",
-        "description": "Charge for site@stripe.com"
+        "card": {
+            "number": "4242424242424242",
+            "exp_month": 12,
+            "exp_year": 2020,
+        },
+        "description": "Charge for python-stripe example"
     }
 
-    response = charges.charge(chargeInfo)
+    charge = charges.charge(chargeInfo)
+    #chargeResponse = charges.getCharge(response["id"]);
+    #response = charges.listCharges()
+    response = charges.refund(charge["id"], charge["amount"])
     print response
 
 if __name__ == '__main__':

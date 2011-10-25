@@ -1,10 +1,34 @@
 from stripe import Stripe
 
-class Charges(Stripe):
+class Charges(object):
+    charges_action = "charges"
+    refund_action = "refund"
 
-    def __init__(self, api_key, password = ""):
-        Stripe.__init__(self, api_key, password)
+    def __init__(self, stripe):
+        self.stripe = stripe
 
     def charge(self, data):
-        return self._postRequest("charges", data)
+        response = self.stripe._postRequest("charges", data)
+        
+        return response
+
+    def getCharge(self, charge_id):
+        url = self._constructChargeAction(charge_id)
+        response = self.stripe._getRequest(url)
+        
+        return response
+
+    def listCharges(self, data=None):
+        response = self.stripe._getRequest(self.charges_action, data)
+        
+        return response
+
+    def refund(self, charge_id, amount):
+        url = "{}/{}".format(self._constructChargeAction(charge_id), self.refund_action)
+        response = self.stripe._postRequest(url, { "amount": amount })
+        
+        return response
+
+    def _constructChargeAction(self, charge_id):
+        return "{}/{}".format(self.charges_action, charge_id)
     
