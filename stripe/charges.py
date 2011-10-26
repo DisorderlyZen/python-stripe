@@ -8,27 +8,27 @@ class Charges(object):
         self.stripe = stripe
 
     def charge(self, data):
-        response = self.stripe.postRequest("charges", data)
+        response = self.stripe._postRequest("charges", data)
         
         return response
 
     def getCharge(self, charge_id):
         url = self._constructChargeAction(charge_id)
-        response = self.stripe.getRequest(url)
+        response = self.stripe._getRequest(url)
         
         return response
 
     def listCharges(self, data=None):
-        response = self.stripe.getRequest(self.__class__.charges_action, data)
+        response = self.stripe._getRequest(self.charges_action, data)
         
         return response
 
     def refund(self, charge_id, amount):
         url = "{}/{}".format(self._constructChargeAction(charge_id), self.refund_action)
-        response = self.stripe.postRequest(url, { "amount": amount })
+        response = self.stripe._postRequest(url, { "amount": amount })
         
         return response
 
     def _constructChargeAction(self, charge_id):
-        return "{}/{}".format(self.__class__.charges_action, charge_id)
+        return "{}/{}".format(self.charges_action, charge_id)
     

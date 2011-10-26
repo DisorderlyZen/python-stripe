@@ -11,11 +11,11 @@ class Stripe(object):
         self.api_key = api_key
         self.password = password
 
-    def getRequest(self, action, data=None):
+    def _getRequest(self, action, data=None):
         request = urllib2.Request(self._createApiUrl(action, data))
         return self._sendRequest(request)
 
-    def postRequest(self, action, data):
+    def _postRequest(self, action, data):
         request = urllib2.Request(self._createApiUrl(action))
         self._formatData(data)
         request.add_data(urllib.urlencode(data))
@@ -39,8 +39,8 @@ class Stripe(object):
         data.pop(key)
 
     def _createApiUrl(self, action, data = None):
-        url = urlparse(self.__class__.api_url)
-        api_path = "{}/{}/{}".format(url.path, self.__class__.api_version, action)
+        url = urlparse(self.api_url)
+        api_path = "{}/{}/{}".format(url.path, self.api_version, action)
         
         api_query = ""
         if data is not None:
