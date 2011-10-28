@@ -24,11 +24,11 @@ class Charges(object):
         return response
 
     def refund(self, charge_id, amount):
-        url = "{}/{}".format(self._constructChargeAction(charge_id), self.refund_action)
+        url = "{}/{}".format(self._constructChargeAction(charge_id), self.__class__.refund_action)
         response = self.stripe.postRequest(url, { "amount": amount })
         
         return response
 
     def _constructChargeAction(self, charge_id):
-        return "{}/{}".format(self.__class__.charges_action, charge_id)
+        return "{}/{}".format(self.charges_action, charge_id)
     
